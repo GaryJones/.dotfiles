@@ -1,5 +1,15 @@
 # Reset the PATH to sane defaults
-export PATH="$HOME/.brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Let's not forger local brew users
+if [ -e "$HOME/.brew" ]; then
+  export PATH="$HOME/.brew/sbin:$HOME/.brew/bin:$PATH"
+fi
+
+# Neither shall we forget .local
+if [ -e "$HOME/.local" ]; then
+  export PATH="$HOME/.local/sbin:$HOME/.local/bin:$PATH"
+fi
 
 # Load antigen
 source "$HOME/.antigen/antigen.zsh"
@@ -13,3 +23,8 @@ function serve {
   port=${1:-8000}
   ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
 }
+
+# Load some extra config
+if [ -e "$HOME/.zextra" ]; then
+  source "$HOME/.zextra"
+fi
