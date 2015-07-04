@@ -11,6 +11,11 @@ if [ -e "$HOME/.local" ]; then
   export PATH="$HOME/.local/sbin:$HOME/.local/bin:$PATH"
 fi
 
+# Load rbenv
+if command -v rbenv > /dev/null 2>&1; then
+  eval "$(rbenv init - zsh)"
+fi
+
 # Load antigen
 source "$HOME/.antigen/antigen.zsh"
 antigen use oh-my-zsh
