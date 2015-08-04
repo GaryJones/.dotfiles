@@ -11,6 +11,11 @@ if [ -e "$HOME/.local" ]; then
   export PATH="$HOME/.local/sbin:$HOME/.local/bin:$PATH"
 fi
 
+# Launch tmux
+if command -v tmux>/dev/null; then
+  [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
+fi
+
 # Load rbenv
 if command -v rbenv > /dev/null 2>&1; then
   eval "$(rbenv init - zsh)"
