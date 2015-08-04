@@ -20,7 +20,7 @@ fi
 source "$HOME/.antigen/antigen.zsh"
 antigen use oh-my-zsh
 antigen bundle git
-antigen theme candy
+antigen theme gallifrey
 antigen apply
 
 # A serve function, launching a basic ruby webserver
