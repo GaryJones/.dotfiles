@@ -13,7 +13,14 @@ fi
 
 # Launch tmux
 if command -v tmux>/dev/null; then
-  [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
+  if [[ ! $TERM =~ screen ]] && [ -z $TMUX ]; then
+    ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
+    if [[ -z "$ID" ]]; then
+        exec tmux
+    else
+        exec tmux attach-session -t "$ID"
+    fi
+  fi
 fi
 
 # Load rbenv
