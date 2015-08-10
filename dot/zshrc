@@ -1,6 +1,20 @@
 # Reset the PATH to sane defaults
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+# Load some /opt stuff
+
+# Like X11
+if [ -e "/opt/X11" ]; then
+  export PATH="/opt/X11/bin:$PATH"
+fi
+
+# And cross compilers, often found in /opt/cross/<TARGET>
+if [ -e "/opt/cross" ]; then
+  for f in /opt/cross/*; do
+    export PATH="$f/bin:$PATH"
+  done
+fi
+
 # Let's not forger local brew users
 if [ -e "$HOME/.brew" ]; then
   export PATH="$HOME/.brew/sbin:$HOME/.brew/bin:$PATH"
