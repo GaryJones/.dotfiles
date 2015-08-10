@@ -1,61 +1,71 @@
-# Reset the PATH to sane defaults
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-
-# Load some /opt stuff
-
-# Like X11
-if [ -e "/opt/X11" ]; then
-  export PATH="/opt/X11/bin:$PATH"
-fi
-
-# And cross compilers, often found in /opt/cross/<TARGET>
-if [ -e "/opt/cross" ]; then
-  for f in /opt/cross/*; do
-    export PATH="$f/bin:$PATH"
-  done
-fi
-
-# Let's not forger local brew users
-if [ -e "$HOME/.brew" ]; then
-  export PATH="$HOME/.brew/sbin:$HOME/.brew/bin:$PATH"
-fi
-
-# Neither shall we forget .local
-if [ -e "$HOME/.local" ]; then
-  export PATH="$HOME/.local/sbin:$HOME/.local/bin:$PATH"
-fi
-
-# Launch tmux
-if command -v tmux>/dev/null; then
-  if [[ ! $TERM =~ screen ]] && [ -z $TMUX ]; then
-    ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
-    if [[ -z "$ID" ]]; then
-        exec tmux
-    else
-        exec tmux attach-session -t "$ID"
-    fi
-  fi
-fi
-
-# Load rbenv
-if command -v rbenv > /dev/null 2>&1; then
-  eval "$(rbenv init - zsh)"
-fi
-
-# Load antigen
-source "$HOME/.antigen/antigen.zsh"
-antigen use oh-my-zsh
-antigen bundle git
-antigen theme gallifrey
-antigen apply
-
-# A serve function, launching a basic ruby webserver
-function serve {
-  port=${1:-8000}
-  ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
+function add_path {
+  export PATH="$1:$PATH"
 }
 
-# Load some extra config
-if [ -e "$HOME/.zextra" ]; then
-  source "$HOME/.zextra"
-fi
+function main {
+  # Reset the PATH to sane defaults
+  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+  # Load some /opt stuff
+
+  # Like X11
+  if [ -e "/opt/X11" ]; then
+    add_path "/opt/X11/bin"
+  fi
+
+  # And cross compilers, often found in /opt/cross/<TARGET>
+  if [ -e "/opt/cross" ]; then
+    for f in /opt/cross/*; do
+      add_path "$f/bin"
+    done
+  fi
+
+  # Let's not forger local brew users
+  if [ -e "$HOME/.brew" ]; then
+    add_path "$HOME/.brew/bin"
+    add_path "$HOME/.brew/sbin"
+  fi
+
+  # Neither shall we forget .local
+  if [ -e "$HOME/.local" ]; then
+    add_path "$HOME/.local/bin"
+    add_path "$HOME/.local/sbin"
+  fi
+
+  # Launch tmux
+  if command -v tmux>/dev/null; then
+    if [[ ! $TERM =~ screen ]] && [ -z $TMUX ]; then
+      ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
+      if [[ -z "$ID" ]]; then
+          exec tmux
+      else
+          exec tmux attach-session -t "$ID"
+      fi
+    fi
+  fi
+
+  # Load rbenv
+  if command -v rbenv > /dev/null 2>&1; then
+    eval "$(rbenv init - zsh)"
+  fi
+
+  # Load antigen
+  source "$HOME/.antigen/antigen.zsh"
+  antigen use oh-my-zsh
+  antigen bundle git
+  antigen theme gallifrey
+  antigen apply
+
+  # A serve function, launching a basic ruby webserver
+  function serve {
+    port=${1:-8000}
+    ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
+  }
+
+  # Load some extra config
+  if [ -e "$HOME/.zextra" ]; then
+    source "$HOME/.zextra"
+  fi
+}
+
+main
