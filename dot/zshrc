@@ -62,6 +62,11 @@ function main {
     ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
   }
 
+  if command -v cmake > /dev/null 2>&1; then
+    alias cm="cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja"
+    alias cmr="cmake -DCMAKE_BUILD_TYPE=Release -G Ninja"
+  fi
+
   # Load some extra config
   if [ -e "$HOME/.zextra" ]; then
     source "$HOME/.zextra"
