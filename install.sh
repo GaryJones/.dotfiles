@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -27,7 +27,7 @@ for f in $files; do
     prefix=""
     # A small hack to make relative symlinks work properly
     if [ $slashes -gt 0 ]; then
-      prefix=$(jot -b ../ $slashes | tr -d '\n')
+      prefix=$(yes ../ | head -n $slashes | tr -d '\n')
     fi
     ln -s $prefix.dotfiles/dot/$f .$f
   else
