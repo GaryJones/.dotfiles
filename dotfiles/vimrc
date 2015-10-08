@@ -19,7 +19,7 @@ set expandtab
 set shiftwidth=4
 set smartindent
 set autoindent
-set showmode
+set noshowmode
 set ignorecase
 set shiftround
 set ruler
@@ -80,5 +80,11 @@ call vundle#end()
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 map <TAB> :NERDTreeToggle<CR>
+" }}}
+" Powerline {{{
+if !empty($POWERLINE_ROOT)
+    set rtp+=$POWERLINE_ROOT/bindings/vim
+    set laststatus=2
+endif
 " }}}
 " vim:foldmethod=marker:foldlevel=0
