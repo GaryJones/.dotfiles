@@ -2,6 +2,7 @@
 
 " Disable VI compat {{{
 set nocompatible
+filetype off
 " }}}
 " Basic configuration {{{
 set modeline
@@ -31,9 +32,6 @@ set showmatch
 " Search {{{
 set incsearch
 set hlsearch
-" }}}
-" Filetype {{{
-filetype indent on
 " }}}
 " Autogroups {{{
 augroup configgroup
@@ -70,9 +68,17 @@ nnoremap <up> g<up>
 nnoremap <down> g<down>
 nnoremap <space> za
 " }}}
-" Plugins {{{
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-execute pathogen#infect()
+" Vundle {{{
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+call vundle#end()
 " }}}
-
+" NERDTree {{{
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <TAB> :NERDTreeToggle<CR>
+" }}}
 " vim:foldmethod=marker:foldlevel=0

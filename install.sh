@@ -7,13 +7,9 @@ git submodule init
 git submodule update
 
 # Get the dotfiles list
-cd ~/.dotfiles/dot
+cd ~/.dotfiles/dotfiles
 files=$(find . | cut -c 3-)
 cd
-
-# Make a backup folder
-echo "Creating a backup folder"
-mkdir -p .dotfiles_backup
 
 # Link each file to home
 for f in $files; do
@@ -24,7 +20,7 @@ for f in $files; do
     cp .$f .dotfiles_backup/$f
   fi
   # If the file is not a directory, then it should be linked
-  if [ ! -d .dotfiles/dot/$f ]; then
+  if [ ! -d .dotfiles/dotfiles/$f ]; then
     rm -rf .$f
     echo "Linking .$f"
     slashes=$(echo .$f | grep -o / | wc -l | tr -d ' ')
@@ -33,7 +29,7 @@ for f in $files; do
     if [ $slashes -gt 0 ]; then
       prefix=$(yes ../ | head -n $slashes | tr -d '\n')
     fi
-    ln -s $prefix.dotfiles/dot/$f .$f
+    ln -s $prefix.dotfiles/dotfiles/$f .$f
   else
     # If the file is a directory, then create a directory too
     # This is useful, for example, antigen downloads some stuff in $HOME/.antigen
@@ -41,6 +37,17 @@ for f in $files; do
     mkdir -p .$f
   fi
 done
+
+# Post install
+
+# Vim
+
+# Vundle can't be installed as a submodule, as it is auto-updating
+if [ ! -e "$HOME/.vim/bundle/Vundle.vim" ]; then
+  mkdir -p "$HOME/.vim/bundle"
+  git clone git@github.com:VundleVim/Vundle.vim.git "$HOME/.vim/bundle/Vundle.vim"
+fi
+vim +PluginInstall +qall
 
 echo "Done !"
 
