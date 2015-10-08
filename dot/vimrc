@@ -1,2 +1,6 @@
 syn on
 set number
+set backspace=indent,eol,start
+set t_kb=
+set t_kD=[3~
+
