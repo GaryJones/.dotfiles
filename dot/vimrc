@@ -1,6 +1,77 @@
-syn on
+" Vim Configuration
+
+" Disable VI compat {{{
+set nocompatible
+" }}}
+" Basic configuration {{{
+set modeline
+set modelines=1
+syntax on
 set number
+set mouse=a
 set backspace=indent,eol,start
 set t_kb=
 set t_kD=[3~
+set tabstop=4
+set softtabstop=4
+set expandtab
+set shiftwidth=4
+set smartindent
+set autoindent
+set showmode
+set ignorecase
+set shiftround
+set ruler
+set showcmd
+set cursorline
+set wildmenu
+set lazyredraw
+set showmatch
+" }}}
+" Search {{{
+set incsearch
+set hlsearch
+" }}}
+" Filetype {{{
+filetype indent on
+" }}}
+" Autogroups {{{
+augroup configgroup
+    autocmd!
+    autocmd VimEnter * highlight clear SignColumn
+    autocmd FileType ruby setlocal tabstop=2
+    autocmd FileType ruby setlocal shiftwidth=2
+    autocmd FileType ruby setlocal softtabstop=2
+    autocmd FileType ruby setlocal commentstring=#\ %s
+    autocmd BufEnter Makefile setlocal noexpandtab
+    autocmd BufEnter *.sh setlocal tabstop=2
+    autocmd BufEnter *.sh setlocal shiftwidth=2
+    autocmd BufEnter *.sh setlocal softtabstop=2
+augroup END
+" }}}
+" Backups {{{
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+" }}}
+" Theme {{{
+color Tomorrow-Night
+" }}}
+" Smart paren {{{
+inoremap ( ()<left>
+" }}}
+" Movement {{{
+nnoremap j gj
+nnoremap k gk
 
+nnoremap <up> g<up>
+nnoremap <down> g<down>
+nnoremap <space> za
+" }}}
+" Plugins {{{
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+" }}}
+
+" vim:foldmethod=marker:foldlevel=0
