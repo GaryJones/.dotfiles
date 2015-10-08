@@ -2,6 +2,10 @@
 
 set -e
 
+# Clone the submodules
+git submodule init
+git submodule update
+
 # Get the dotfiles list
 cd ~/.dotfiles/dot
 files=$(find . | cut -c 3-)

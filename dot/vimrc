@@ -71,7 +71,8 @@ nnoremap <down> g<down>
 nnoremap <space> za
 " }}}
 " Plugins {{{
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
