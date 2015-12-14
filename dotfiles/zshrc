@@ -32,12 +32,9 @@ function main {
     add_path "$HOME/.local/sbin"
   fi
 
-  # Check for powerline
-  if command -v pip>/dev/null; then
-    powerline_path=$(pip show powerline-status | grep Location: | cut -c 11-)
-    if [ ! -z "$powerline_path" ]; then
-      export POWERLINE_ROOT="$powerline_path/powerline"
-    fi
+  # Check for Sublime Text
+  if [ -e "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]; then
+    alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
   fi
 
   # Launch tmux
