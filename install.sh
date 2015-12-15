@@ -45,7 +45,7 @@ done
 # Vundle can't be installed as a submodule, as it is auto-updating
 if [ ! -e "$HOME/.vim/bundle/Vundle.vim" ]; then
   mkdir -p "$HOME/.vim/bundle"
-  git clone git@github.com:VundleVim/Vundle.vim.git "$HOME/.vim/bundle/Vundle.vim"
+  git clone https://github.com/VundleVim/Vundle.vim.git "$HOME/.vim/bundle/Vundle.vim"
 fi
 vim +PluginInstall +qall
 
