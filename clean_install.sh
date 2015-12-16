@@ -7,4 +7,3 @@ for file in dotfiles/*; do
 done
 
 ./install.sh
-
