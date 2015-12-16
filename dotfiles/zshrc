@@ -54,11 +54,17 @@ function main {
     eval "$(rbenv init - zsh)"
   fi
 
+  # PowerLevel9k config
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
+  POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
+
   # Load antigen
   source "$HOME/.antigen/antigen.zsh"
+
+  antigen theme bhilburn/powerlevel9k powerlevel9k
   antigen use oh-my-zsh
   antigen bundle git
-  antigen theme gallifrey
+  antigen bundle git-extras
   antigen apply
 
   # A serve function, launching a basic ruby webserver
@@ -79,3 +85,8 @@ function main {
 }
 
 main
+
+# unset
+unset -f add_path
+unset -f main
+
