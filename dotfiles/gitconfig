@@ -1,0 +1,96 @@
+[alias]
+	c = commit -am
+	up = pull
+	p = push
+	s = status -s
+	sclone = clone --depth=1
+	co = checkout
+	df = diff --color --color-words --abbrev
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+
+	# Show the diff between the latest commit and the current state
+	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+[color]
+	ui = always
+[color "diff"]
+	meta = yellow bold
+	commit = green bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = "red bold 52"
+	newNormal = "green bold"
+	newHighlight = "green bold 22"
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[core]
+	autocrlf = input
+	excludesfile = /Users/gary/.gitignore_global
+	attributesfile = /Users/gary/.gitattributes_global
+	editor = /Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl -n -w
+	quotepath = false
+	pager = less -F -X
+
+[credential]
+	helper = osxkeychain
+
+[diff]
+	noprefix = true
+	submodule = log
+	tool = diffmerge
+[difftool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
+	path = 
+
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+
+[init]
+	templatedir = /Applications/SourceTree.app/Contents/Resources/git_local/share/git-core/templates
+
+[merge]
+	defaultToUpstream = true
+	tool = diffmerge
+[mergetool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+
+	trustExitCode = true
+[push]
+	default = simple
+
+# use separate file for username / github token / etc
+[include]
+  path = ~/gitm.gitconfig.local
+[status]
+	submoduleSummary = true
+	showUntrackedFiles = all
+[pull]
+	rebase = preserve
+	default = current
+[help]
+	format = html
+	autocorrect = 1
+[commit]
+	template = $HOME/.committemplate
+[rebase]
+	autosquash = true
+[difftool "diffmerge"]
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[mergetool "diffmerge"]
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+	trustExitCode = true
+[user]
+	name = Gary Jones
+	email = gary@gamajo.com

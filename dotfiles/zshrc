@@ -1,92 +1,109 @@
-function add_path {
-  export PATH="$1:$PATH"
-}
+# .zshrc is sourced in interactive shells.  It should contain commands to set up
+# aliases, functions, options, key bindings, etc.
 
 function main {
   # Reset the PATH to sane defaults
-  export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-
-  # Load some /opt stuff
-
-  # Like X11
-  if [ -e "/opt/X11" ]; then
-    add_path "/opt/X11/bin"
-  fi
-
-  # And cross compilers, often found in /opt/cross/<TARGET>
-  if [ -e "/opt/cross" ]; then
-    for f in /opt/cross/*; do
-      add_path "$f/bin"
-    done
-  fi
-
-  # Let's not forger local brew users
-  if [ -e "$HOME/.brew" ]; then
-    add_path "$HOME/.brew/bin"
-    add_path "$HOME/.brew/sbin"
-  fi
-
-  # Neither shall we forget .local
-  if [ -e "$HOME/.local" ]; then
-    add_path "$HOME/.local/bin"
-    add_path "$HOME/.local/sbin"
-  fi
+  # export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
   # Check for Sublime Text
   if [ -e "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]; then
     alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
   fi
 
-  # Launch tmux
-  if command -v tmux>/dev/null; then
-    if [[ ! $TERM =~ screen ]] && [ -z $TMUX ]; then
-      ID="`tmux ls | grep -vm1 attached | cut -d: -f1`"
-      if [[ -z "$ID" ]]; then
-          exec tmux
-      else
-          exec tmux attach-session -t "$ID"
-      fi
-    fi
-  fi
+  alias cc='vendor/bin/codecept'
+  alias copysshkey='pbcopy < ~/.ssh/id_rsa.pub'
+  alias copyprivatesshkey='pbcopy < ~/.ssh/id_rsa'
+  alias update='brew_update; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update --no-rdoc --no-ri'
+  alias brew_update="brew -v update; brew upgrade --force-bottle --cleanup; brew cleanup; brew cask cleanup; brew prune; brew doctor; npm-check -g -u"
+  alias reload="source $HOME/.antigen/antigen.zsh"
+  alias imagecheck="file **/*.jpeg **/*.jpg(.N) | grep -v JPEG; file **/*.gif(.N) | grep -v GIF; file **/*.png(.N) | grep -v PNG"
+  alias gitlog="git log --oneline --decorate --graph -15"
+  alias hosts='sudo $EDITOR /etc/hosts'
+  alias diskspace_report="df -P -kHl"
+  alias free_diskspace_report="diskspace_report"
+  alias sshdev2="ssh webdev@10.26.129.15"
+  alias sshdt="ssh webdev@10.26.129.13"
 
-  # Load rbenv
-  if command -v rbenv > /dev/null 2>&1; then
-    eval "$(rbenv init - zsh)"
-  fi
+  # Recursively delete `.DS_Store` files
+  alias cleanup_dsstore="find . -name '*.DS_Store' -type f -ls -delete"
 
-  # PowerLevel9k config
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-  POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
+  # Uncomment following line if you want red dots to be displayed while waiting for completion
+  COMPLETION_WAITING_DOTS="true"
+
+  # If not a command, ZSH will see if this is a directory and cd into it.
+  AUTO_CD="true"
 
   # Load antigen
   source "$HOME/.antigen/antigen.zsh"
 
-  antigen theme bhilburn/powerlevel9k powerlevel9k
+  #antigen theme bhilburn/powerlevel9k powerlevel9k
   antigen use oh-my-zsh
+  antigen bundle robbyrussell/oh-my-zsh lib/
+  antigen theme agnoster
+  antigen bundle common-aliases
+  antigen bundle brew
+  antigen bundle composer
   antigen bundle git
-  antigen bundle git-extras
+  antigen bundle node
+  antigen bundle npm
+  antigen bundle osx
+  antigen bundle scd
+  antigen bundle vagrant
+  antigen bundle zsh-users/zsh-syntax-highlighting
+  antigen bundle zsh-users/zsh-history-substring-search
+  antigen bundle zsh-users/zsh-completions
+
   antigen apply
 
-  # A serve function, launching a basic ruby webserver
-  function serve {
-    port=${1:-8000}
-    ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
-  }
-
-  if command -v cmake > /dev/null 2>&1; then
-    alias cm="cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja"
-    alias cmr="cmake -DCMAKE_BUILD_TYPE=Release -G Ninja"
-  fi
+  ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+  ZSH_HIGHLIGHT_PATTERNS+=('rm -rf *' 'fg=white,bold,bg=red')
+  # Set default user.
+  # Will remove from prompt if matches current user
+  DEFAULT_USER=gary
 
   # Load some extra config
   if [ -e "$HOME/.zextra" ]; then
     source "$HOME/.zextra"
   fi
+
+  source /Users/gary/.phpbrew/bashrc
 }
 
 main
 
 # unset
-unset -f add_path
 unset -f main
+
+# Create a new directory and enter it
+function mkd() {
+    mkdir -p "$@" && cd "$@"
+}
+
+# Create a data URL from a file
+function dataurl() {
+    local mimeType=$(file -b --mime-type "$1")
+    local data=""
+    if [[ $mimeType == text/* ]]; then
+        mimeType="${mimeType};charset=utf-8"
+    fi
+    echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')"
+}
+
+# Get gzipped file size
+function gz() {
+    echo "orig size (bytes): "
+    cat "$1" | wc -c
+    echo "gzipped size (bytes): "
+    gzip -c "$1" | wc -c
+}
+
+# Change Finder window to show current terminal directory
+function finder {
+ osascript -e 'set cwd to do shell script "pwd"'\
+ -e 'tell application "Finder"'\
+ -e "if (${1-1} <= (count Finder windows)) then"\
+ -e "set the target of window ${1-1} to (POSIX file cwd) as string"\
+ -e 'else' -e "open (POSIX file cwd) as string"\
+ -e 'end if' -e 'end tell';\
+};
 

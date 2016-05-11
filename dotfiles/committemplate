@@ -1,0 +1,7 @@
+Component: Brief summary
+
+Longer description with more details, such as a `new_hook` being introduced with the context of a `$post` and a `$screen`.
+
+More paragraphs can be added as needed.
+
+Fixes #9999. See #9999.
