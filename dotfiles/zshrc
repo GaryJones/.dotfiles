@@ -31,7 +31,7 @@ function main {
   COMPLETION_WAITING_DOTS="true"
 
   # If not a command, ZSH will see if this is a directory and cd into it.
-  AUTO_CD="true"
+  AUTO_CD="false"
 
   # Load antigen
   source "$HOME/.antigen/antigen.zsh"
